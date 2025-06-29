@@ -2,7 +2,6 @@ import { basehub } from "basehub"
 import { Intro } from "./components/intro"
 import { HeroPost, PostMetaFragment } from "./components/hero-post"
 import { MoreStories } from "./components/more-stories"
-import { Newsletter } from "./components/newsletter"
 import { Metadata } from "next"
 
 export const dynamic = "force-static"
@@ -19,31 +18,31 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   })
 
+  const title = data.meta?.title || "Copa del Mundo 2026: Noticias e información para viajeros"
+  const description = data.meta?.description || "Noticias e información actualizada para viajeros sobre la Copa del Mundo 2026"
+
   return {
-    title: data.meta?.title || `BaseHub x v0 Example`,
-    description:
-      data.meta?.description || `This is a blog built with BaseHub and v0.`,
+    title,
+    description,
     generator: "v0.dev",
     openGraph: {
-      title: data.meta?.title || `BaseHub x v0 Example`,
-      description:
-        data.meta?.description || `This is a blog built with BaseHub and v0.`,
+      title,
+      description,
       images: data.meta?.ogImage?.url
         ? [
             {
               url: data.meta.ogImage.url,
               width: 1200,
               height: 630,
-              alt: data.meta?.title || `BaseHub x v0 Example`,
+              alt: title,
             },
           ]
         : [],
     },
     twitter: {
       card: "summary_large_image",
-      title: data.meta?.title || `BaseHub x v0 Example`,
-      description:
-        data.meta?.description || `This is a blog built with BaseHub and v0.`,
+      title,
+      description,
       images: data.meta?.ogImage?.url ? [data.meta.ogImage.url] : [],
     },
   }
@@ -58,15 +57,7 @@ export default async function Page() {
         items: PostMetaFragment,
       },
     },
-    newsletter: {
-      subscribers: {
-        ingestKey: true,
-        schema: true,
-      },
-    },
   })
-
-  console.dir(data, { depth: null })
 
   const heroPost = data?.blog?.posts?.items[0]
   const morePosts = data?.blog?.posts?.items?.slice(1)
@@ -80,7 +71,6 @@ export default async function Page() {
           <MoreStories morePosts={morePosts} title="Más Posts" />
         )}
       </section>
-      <Newsletter newsletter={data?.newsletter?.subscribers} />
     </main>
   )
 }
