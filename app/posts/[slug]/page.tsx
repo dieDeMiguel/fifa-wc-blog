@@ -1,28 +1,28 @@
-import Link from "next/link"
-import type { Metadata } from "next"
-import { notFound } from "next/navigation"
-import { basehub } from "basehub"
-import { Post, PostFragment } from "@/app/components/post"
-import { MoreStories } from "@/app/components/more-stories"
-import { PostMetaFragment } from "@/app/components/hero-post"
+import Link from "next/link";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { basehub } from "basehub";
+import { Post, PostFragment } from "@/app/components/post";
+import { MoreStories } from "@/app/components/more-stories";
+import { PostMetaFragment } from "@/app/components/hero-post";
 
-export const dynamic = "force-static"
-export const revalidate = 30
+export const dynamic = "force-static";
+export const revalidate = 30;
 
 export async function generateStaticParams() {
   const data = await basehub().query({
     blog: { posts: { items: { _slug: true } } },
-  })
+  });
 
-  return data.blog.posts.items.map((post) => ({ slug: post._slug }))
+  return data.blog.posts.items.map((post) => ({ slug: post._slug }));
 }
 
-type PageProps = { params: Promise<{ slug: string }> }
+type PageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { slug } = await params;
   const postData = await basehub().query({
     meta: {
       title: true,
@@ -33,14 +33,14 @@ export async function generateMetadata({
         items: PostMetaFragment,
       },
     },
-  })
-  const [post] = postData.blog.posts.items
-  if (!post) notFound()
+  });
+  const [post] = postData.blog.posts.items;
+  if (!post) notFound();
 
-  const postTitle = post._title
-  const postDescription = post.excerpt
-  const postOgImage = post.coverImage?.url
-  const siteTitle = postData.meta?.title || `BaseHub x v0 Example`
+  const postTitle = post._title;
+  const postDescription = post.excerpt;
+  const postOgImage = post.coverImage?.url;
+  const siteTitle = postData.meta?.title || `BaseHub x v0 Example`;
 
   return {
     title: `${postTitle} | ${siteTitle}`,
@@ -65,11 +65,11 @@ export async function generateMetadata({
       description: postDescription,
       images: postOgImage ? [postOgImage] : [],
     },
-  }
+  };
 }
 
 export default async function PostPage({ params }: PageProps) {
-  const { slug } = await params
+  const { slug } = await params;
 
   const [postData, morePostsData] = await Promise.all([
     basehub().query({
@@ -93,10 +93,10 @@ export default async function PostPage({ params }: PageProps) {
         },
       },
     }),
-  ])
+  ]);
 
-  const [post] = postData.blog.posts.items
-  if (!post) notFound()
+  const [post] = postData.blog.posts.items;
+  if (!post) notFound();
 
   return (
     <main>
@@ -107,12 +107,22 @@ export default async function PostPage({ params }: PageProps) {
           </Link>
         </h2>
         <Post {...post} />
-        <hr className="mt-28 mb-24" />
-        <MoreStories
-          morePosts={morePostsData.blog.posts.items}
-          title={postData.blog.morePosts}
-        />
+        {morePostsData.blog.posts.items.length > 0 ? (
+          <>
+            <hr className="mt-28 mb-24" />
+            <MoreStories
+              morePosts={morePostsData.blog.posts.items}
+              title="Más Posts"
+            />
+          </>
+        ) : (
+          <>
+            <br />
+            <br />
+            <br />
+          </>
+        )}
       </section>
     </main>
-  )
+  );
 }

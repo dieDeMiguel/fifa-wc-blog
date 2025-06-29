@@ -77,7 +77,7 @@ export default async function Page() {
         <Intro />
         {heroPost && <HeroPost {...heroPost} />}
         {morePosts && morePosts.length > 0 && (
-          <MoreStories morePosts={morePosts} title={data?.blog?.morePosts} />
+          <MoreStories morePosts={morePosts} title="Más Posts" />
         )}
       </section>
       <Newsletter newsletter={data?.newsletter?.subscribers} />
