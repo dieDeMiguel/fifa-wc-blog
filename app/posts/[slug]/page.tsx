@@ -103,7 +103,7 @@ export default async function PostPage({ params }: PageProps) {
       <section className="container mx-auto px-5">
         <h2 className="mt-16 mb-16 md:mb-12 text-2xl font-bold leading-tight tracking-tight md:text-4xl md:tracking-tighter">
           <Link href="/" className="hover:underline">
-            Blog.
+            Copa del Mundo 2026
           </Link>
         </h2>
         <Post {...post} />

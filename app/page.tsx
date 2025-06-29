@@ -66,17 +66,21 @@ export default async function Page() {
     },
   })
 
-  const heroPost = data.blog.posts.items[0]
-  const morePosts = data.blog.posts.items.slice(1)
+  console.dir(data, { depth: null })
+
+  const heroPost = data?.blog?.posts?.items[0]
+  const morePosts = data?.blog?.posts?.items?.slice(1)
 
   return (
     <main>
       <section className="container mx-auto px-5">
         <Intro />
         {heroPost && <HeroPost {...heroPost} />}
-        <MoreStories morePosts={morePosts} title={data.blog.morePosts} />
+        {morePosts && morePosts.length > 0 && (
+          <MoreStories morePosts={morePosts} title={data?.blog?.morePosts} />
+        )}
       </section>
-      <Newsletter newsletter={data.newsletter.subscribers} />
+      <Newsletter newsletter={data?.newsletter?.subscribers} />
     </main>
   )
 }
